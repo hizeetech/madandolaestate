@@ -287,5 +287,14 @@ JJAZZMIN_SETTINGS = {
 
     # Add custom CSS if needed
     "custom_css": None,
-    "custom_js": None,
+    
+    # ⬇️ Add this section
+    "statistics": {
+        "Contact Messages": {
+            "model": "cda_app.ContactMessage",
+            "icon": "fas fa-envelope",
+            "link": "cda_app_contactmessage_changelist",
+            "order": 1,
+        },
+    },
 }

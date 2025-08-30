@@ -119,6 +119,22 @@ class BirthdayCelebrant(models.Model):
         verbose_name_plural = "Birthday Celebrants"
 
 
+
+from django.db import models
+from django.utils import timezone
+
+class ContactMessage(models.Model):
+    name = models.CharField(max_length=255)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    message = models.TextField()
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"{self.name} ({self.email}) - {self.created_at.strftime('%Y-%m-%d %H:%M')}"
+
+
+
 class WellWishes(models.Model):
     celebrant = models.ForeignKey(BirthdayCelebrant, on_delete=models.CASCADE, related_name='well_wishes')
     sender_name = models.CharField(max_length=100)

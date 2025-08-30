@@ -43,6 +43,7 @@ urlpatterns = [
     path('artisans/<int:artisan_id>/gallery/', views.artisan_gallery_view, name='artisan_gallery'),
     path('professionals/<int:professional_id>/gallery/', views.professional_gallery_view, name='professional_gallery'),
     
+    path("contact/", views.contact, name="contact"),
     
     path('project_donations/', views.project_donations_list, name='project_donations_list'),
     path('project_donations/<int:donation_id>/upload_proof/', views.upload_donation_proof, name='upload_donation_proof'),

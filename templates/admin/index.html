@@ -1,0 +1,22 @@
+{% extends "admin/index.html" %}
+
+{% block content %}
+<div class="row mt-4">
+  <div class="col-lg-6">
+    <div class="card bg-dark text-white shadow-sm mb-3">
+      <div class="card-header">
+        <i class="fas fa-envelope"></i> Latest Contact Messages
+      </div>
+      <div class="card-body">
+        {% for msg in contact_messages %}
+          <p><strong>{{ msg.name }}</strong>: {{ msg.message|truncatechars:50 }}</p>
+        {% empty %}
+          <p>No messages yet.</p>
+        {% endfor %}
+        <a href="{% url 'admin:cda_app_contactmessage_changelist' %}" class="btn btn-primary btn-sm">View All</a>
+      </div>
+    </div>
+  </div>
+</div>
+{{ block.super }}
+{% endblock %}

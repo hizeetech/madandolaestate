@@ -751,3 +751,46 @@ def upload_donation_proof(request, donation_id):
     else:
         form = DonationProofForm(initial={'donation_reference_number': project_donation.reference_number})
     return render(request, 'upload_donation_proof.html', {'form': form, 'project_donation': project_donation})
+
+
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from .models import ContactMessage
+from django.http import JsonResponse
+
+
+
+def contact(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        phone = request.POST.get("phone")
+        message_text = request.POST.get("message")
+
+        # Save message to DB
+        contact_msg = ContactMessage.objects.create(
+            name=name,
+            email=email,
+            phone=phone,
+            message=message_text
+        )
+
+        # Send email notification to admin
+        send_mail(
+            subject=f"New Contact Message from {name}",
+            message=f"Name: {name}\nEmail: {email}\nPhone: {phone}\n\nMessage:\n{message_text}",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[settings.DEFAULT_FROM_EMAIL],  # Admin email
+        )
+
+        # If request is AJAX -> return JSON
+        if request.headers.get("x-requested-with") == "XMLHttpRequest":
+            return JsonResponse({"status": "success", "message": "Thank you! Your message has been sent."})
+
+        # Else normal form flow
+        messages.success(request, "Thank you! Your message has been sent.")
+        return redirect("home")
+
+    return render(request, "contact.html")  # fallback if GET

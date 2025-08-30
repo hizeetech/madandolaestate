@@ -113,6 +113,64 @@
             background-color: rgba(255, 255, 255, 0.95);
         }
         
+        .footer h5 {
+        font-weight: 600;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #0d6efd;
+        display: inline-block;
+        padding-bottom: 5px;
+        }
+
+        .footer ul li {
+        margin-bottom: 8px;
+        }
+
+        .footer ul li a {
+        display: inline-block;
+        transition: color 0.3s ease;
+        }
+
+        .footer ul li a:hover {
+        color: #0d6efd;
+        padding-left: 5px;
+        }
+
+        .footer .form-control {
+        background: #111;
+        border: 1px solid #333;
+        color: #fff;
+        }
+
+        .footer .form-control:focus {
+        background: #222;
+        border-color: #0d6efd;
+        box-shadow: none;
+        color: #fff;
+        }
+
+        .footer .form-control::placeholder {
+        color: #aaa;
+        }
+
+        .footer .btn-primary {
+        background: #0d6efd;
+        border: none;
+        font-weight: 600;
+        }
+
+        .footer .btn-primary:hover {
+        background: #0b5ed7;
+        }
+
+        .footer .social-icon {
+        transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .footer .social-icon:hover {
+        transform: scale(1.2);
+        color: #0d6efd;
+        }
+        
         @media (max-width: 768px) {
             .container {
                 padding-left: 10px;
@@ -260,9 +318,9 @@
         </div>
 
         <!-- FOOTER -->
-        <footer class="footer text-white">
+        <!-- <footer class="footer text-white">
             <div class="container">
-                <!-- <div class="row">
+                <div class="row">
                     <div class="col-md-4 mb-3">
                         <h5>Contact</h5>
                         {% if site_settings.footer_text %}
@@ -291,13 +349,80 @@
                             <a href="{{ site_settings.linkedin_url }}" target="_blank" class="text-white social-icon"><i class="fab fa-linkedin-in"></i></a> {% endif %}
                         </div>
                     </div>
-                </div> -->
+                </div>
                 <div class="text-center mt-3 small">
                     <p>&copy; {% now "Y" %} Madandola Estate CDA. All rights reserved.</p>
                     <p>Designed by HizeeTech</p>
                 </div>
             </div>
+        </footer> -->
+        <!-- FOOTER -->
+        <footer class="footer text-white">
+            <div class="container">
+                <div class="row text-center text-md-start">
+                
+                <!-- Contact Us -->
+                <div class="col-md-4 mb-4">
+                    <h5 class="fw-bold mb-3">Contact Us</h5>
+                    <p><i class="fas fa-map-marker-alt me-2"></i> Poweline Road, Madandola Estate, Lagos, Nigeria</p>
+                    <p><i class="fas fa-phone me-2"></i> +234 801 234 5678</p>
+                    <p><i class="fas fa-envelope me-2"></i> info@madandolaestate.com</p>
+
+                    <form method="post" action="{% url 'contact' %}">
+                    {% csrf_token %}
+                    <input type="text" name="name" class="form-control mb-2" placeholder="Your Name" required>
+                    <input type="email" name="email" class="form-control mb-2" placeholder="Your Email" required>
+                    <input type="text" name="phone" class="form-control mb-2" placeholder="Your Phone">
+                    <textarea name="message" class="form-control mb-2" placeholder="Your Message..." rows="3" required></textarea>
+                    <button class="btn btn-primary w-100" type="submit">
+                        <i class="fas fa-paper-plane"></i> Send
+                    </button>
+                    </form>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-md-4 mb-4">
+                    <h5 class="fw-bold mb-3">Quick Links</h5>
+                    <ul class="list-unstyled">
+                    <li><a href="{% url 'home' %}"><i class="fas fa-angle-right me-2"></i> Home</a></li>
+                    <li><a href="{% url 'registration' %}"><i class="fas fa-angle-right me-2"></i> Register</a></li>
+                    <li><a href="{% url 'login' %}"><i class="fas fa-angle-right me-2"></i> Login</a></li>
+                    <li><a href="{% url 'project_donations_list' %}"><i class="fas fa-angle-right me-2"></i> Donations</a></li>
+                    </ul>
+                </div>
+
+                <!-- Follow Us -->
+                <div class="col-md-4 mb-4">
+                    <h5 class="fw-bold mb-3">Follow Us</h5>
+                    <p class="small">Stay connected through our social platforms</p>
+                    <div class="d-flex justify-content-center justify-content-md-start gap-3 fs-4 flex-wrap">
+                    {% if site_settings.facebook_url %}
+                        <a href="{{ site_settings.facebook_url }}" target="_blank" class="text-white social-icon"><i class="fab fa-facebook-f"></i></a>
+                    {% endif %}
+                    {% if site_settings.instagram_url %}
+                        <a href="{{ site_settings.instagram_url }}" target="_blank" class="text-white social-icon"><i class="fab fa-instagram"></i></a>
+                    {% endif %}
+                    {% if site_settings.twitter_url %}
+                        <a href="{{ site_settings.twitter_url }}" target="_blank" class="text-white social-icon"><i class="fab fa-x-twitter"></i></a>
+                    {% endif %}
+                    {% if site_settings.tiktok_url %}
+                        <a href="{{ site_settings.tiktok_url }}" target="_blank" class="text-white social-icon"><i class="fab fa-tiktok"></i></a>
+                    {% endif %}
+                    {% if site_settings.linkedin_url %}
+                        <a href="{{ site_settings.linkedin_url }}" target="_blank" class="text-white social-icon"><i class="fab fa-linkedin-in"></i></a>
+                    {% endif %}
+                    </div>
+                </div>
+                </div>
+
+                <!-- Bottom Bar -->
+                <div class="text-center mt-4 small border-top pt-3">
+                <p class="mb-0">&copy; {% now "Y" %} Madandola Estate CDA. All rights reserved.</p>
+                <p class="mb-0">Designed by HizeeTech</p>
+                </div>
+            </div>
         </footer>
+
     </div>
 
     <!-- jQuery & Bootstrap Bundle -->
@@ -324,6 +449,33 @@
     </div>
     <!-- Dark/Light Theme Toggle -->
     <div class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-adjust"></i></div>
+    <script>
+    $(document).ready(function () {
+    $("#contactForm").on("submit", function (e) {
+        e.preventDefault(); // Prevent normal form submit
+
+        let form = $(this);
+        let responseDiv = $("#contactResponse");
+
+        $.ajax({
+        url: form.attr("action"),
+        type: "POST",
+        data: form.serialize(),
+        beforeSend: function () {
+            responseDiv.html('<div class="text-info">Sending...</div>');
+        },
+        success: function (data) {
+            responseDiv.html('<div class="alert alert-success">✅ Message sent successfully!</div>');
+            form.trigger("reset"); // Clear form
+        },
+        error: function (xhr) {
+            responseDiv.html('<div class="alert alert-danger">❌ Error: ' + xhr.responseText + '</div>');
+        }
+        });
+    });
+    });
+    </script>
+
     <script>
         function setTheme(theme) {
             document.documentElement.setAttribute("data-theme", theme);

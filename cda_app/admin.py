@@ -306,6 +306,33 @@ class CustomUserAdmin(UserAdmin):
 
 
 
+from django.contrib import admin
+from .models import ContactMessage
+
+@admin.register(ContactMessage)
+class ContactMessageAdmin(admin.ModelAdmin):
+    list_display = ("name", "email", "phone", "created_at")
+    search_fields = ("name", "email", "phone", "message")
+    list_filter = ("created_at",)
+
+    class Media:
+        css = {
+            "all": ("css/admin_custom.css",)  # optional custom styles
+        }
+
+
+from django.contrib import admin
+from django.template.response import TemplateResponse
+from .models import ContactMessage
+
+def custom_admin_index(request, extra_context=None):
+    extra_context = extra_context or {}
+    extra_context["contact_messages"] = ContactMessage.objects.order_by("-created_at")[:5]
+    return TemplateResponse(request, "admin/index.html", extra_context)
+
+admin.site.index = custom_admin_index
+
+
 
 """ @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):

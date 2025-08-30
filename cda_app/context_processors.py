@@ -39,10 +39,10 @@ def social_links(request):
     }
     
 
-from .models import SocialMediaLinks, FooterText
+from .models import SiteSettings
 
 def global_footer_data(request):
+    site_settings = SiteSettings.objects.first()
     return {
-        'social': SocialMediaLinks.objects.first(),
-        'footer_text': FooterText.objects.first().content if FooterText.objects.exists() else "Stay connected with us."
+        "site_settings": site_settings
     }
