@@ -1,0 +1,39 @@
+<!-- modals.html -->
+<!-- Zoom Image Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content bg-dark text-white border-0">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Zoom Image</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0 m-0 d-flex justify-content-center align-items-center" style="overflow: hidden;">
+                <div id="panzoom-container" class="w-100 h-100 d-flex justify-content-center align-items-center" style="overflow: hidden;">
+                    <img src="" id="modalImage" class="img-fluid" style="cursor: grab; max-width: none;" alt="Zoom Image">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Donate Modal -->
+<div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="donateModalLabel">Donation Details</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <h5 id="projectTitle" class="text-success mb-3"></h5>
+                <p><strong>Bank Name:</strong> <span id="bankName"></span></p>
+                <p><strong>Account Number:</strong> <span id="accountNumber"></span></p>
+                <p><strong>Beneficiary:</strong> <span id="beneficiary"></span></p>
+                <p><strong>Reference Number:</strong> <span id="referenceNumber"></span></p>
+                <div class="alert alert-info mt-3">
+                    Please use the above details to make your donation. Thank you for supporting this project!
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

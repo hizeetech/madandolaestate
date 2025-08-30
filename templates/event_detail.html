@@ -1,0 +1,32 @@
+{% extends 'base.html' %} {% block title %}{{ event.title }} - Madandola Estate CDA{% endblock %} {% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card my-4">
+                <div class="card-header">
+                    <h2>{{ event.title|striptags }}</h2>
+                </div>
+                <div class="card-body">
+                    {% if event.image %}
+                    <img src="{{ event.image.url }}" class="img-fluid mb-3" alt="{{ event.title }}"> {% endif %}
+
+                    <p><strong>Date:</strong> {{ event.date|date:"M d, Y" }}</p>
+                    {% if event.time %}
+                    <p><strong>Time:</strong> {{ event.time }}</p>
+                    {% endif %}
+                    <p><strong>Location:</strong> {{ event.location }}</p>
+
+                    <div class="mt-3">
+                        <h4>Description:</h4>
+                        <p>{{ event.description|safe }}</p>
+                    </div>
+
+                    <div class="mt-4">
+                        <a href="{% url 'events' %}" class="btn btn-secondary">Back to Events</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

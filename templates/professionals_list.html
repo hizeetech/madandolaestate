@@ -1,0 +1,317 @@
+{% extends 'base.html' %} {% load static %} {% block extra_css %}
+<style>
+    /* Custom styles for the row-based professional display (reused from artisan where applicable) */
+    
+    .professional-row-card {
+        background-color: #ffffff;
+        border-radius: 1rem;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        margin-bottom: 2rem;
+        /* Space between rows */
+        display: flex;
+        /* Use flexbox for horizontal layout */
+        align-items: stretch;
+        /* Stretch items to fill height */
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+    
+    .professional-row-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    .professional-image-section {
+        flex: 0 0 250px;
+        /* Fixed width for image section on larger screens */
+        max-width: 250px;
+        position: relative;
+        overflow: hidden;
+        border-top-left-radius: 1rem;
+        border-bottom-left-radius: 1rem;
+    }
+    /* Responsive adjustment for image section width */
+    
+    @media (max-width: 991.98px) {
+        /* For tablets and smaller desktops */
+        .professional-image-section {
+            flex: 0 0 180px;
+            max-width: 180px;
+        }
+    }
+    
+    @media (max-width: 767.98px) {
+        /* For mobile devices */
+        .professional-row-card {
+            flex-direction: column;
+            /* Stack image and info vertically on small screens */
+        }
+        .professional-image-section {
+            flex: none;
+            /* Reset flex properties */
+            width: 100%;
+            max-width: 100%;
+            height: 200px;
+            /* Fixed height for mobile image */
+            border-bottom-left-radius: 0;
+            border-top-right-radius: 1rem;
+        }
+    }
+    
+    .professional-profile-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    
+    .professional-row-card:hover .professional-profile-img {
+        transform: scale(1.05);
+    }
+    
+    .professional-details-section {
+        flex-grow: 1;
+        /* Allow details section to take remaining space */
+        padding: 1.5rem 2rem;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    @media (max-width: 767.98px) {
+        .professional-details-section {
+            padding: 1rem 1.5rem;
+            /* Adjust padding for smaller screens */
+        }
+    }
+    
+    .professional-name {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #047857;
+        /* Deep green */
+        margin-bottom: 0.25rem;
+    }
+    
+    @media (max-width: 767.98px) {
+        .professional-name {
+            font-size: 1.5rem;
+        }
+    }
+    
+    .professional-job-title {
+        font-size: 1.15rem;
+        font-weight: 500;
+        color: #555;
+        margin-bottom: 0.75rem;
+    }
+    
+    .rating-stars {
+        color: #F59E0B;
+        /* Gold for stars */
+        font-size: 1.2rem;
+        margin-right: 0.5rem;
+    }
+    
+    .rating-text {
+        font-weight: 600;
+        color: #333;
+    }
+    
+    .info-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 0.6rem;
+        color: #444;
+    }
+    
+    .info-item i {
+        font-size: 1.1rem;
+        margin-right: 0.75rem;
+        color: #10B981;
+        /* Emerald green for icons */
+        flex-shrink: 0;
+        padding-top: 0.2rem;
+    }
+    
+    .info-item p {
+        margin-bottom: 0;
+        line-height: 1.4;
+    }
+    
+    .business-description,
+    .products-services {
+        margin-top: 1rem;
+    }
+    
+    .business-description .ck-content,
+    .products-services .ck-content {
+        max-height: 100px;
+        /* Limit height to prevent excessive scrolling within card */
+        overflow-y: auto;
+        /* Add scroll if content exceeds height */
+        padding-right: 5px;
+        /* Space for scrollbar */
+    }
+    /* Scrollbar styles for description/services */
+    
+    .ck-content::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    .ck-content::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+    
+    .ck-content::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 10px;
+    }
+    
+    .ck-content::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+    
+    .btn-view-gallery {
+        background-color: #3B82F6;
+        /* Blue for button */
+        color: white;
+        border-radius: 0.75rem;
+        padding: 0.75rem 1.5rem;
+        font-size: 1.05rem;
+        font-weight: 600;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 1.5rem;
+        /* Space above the button */
+    }
+    
+    .btn-view-gallery:hover {
+        background-color: #2563EB;
+        transform: translateY(-2px);
+    }
+    
+    .btn-view-gallery i {
+        margin-left: 0.5rem;
+    }
+    /* CKEditor content general styling */
+    
+    .ck-content p {
+        margin-bottom: 0.5rem;
+        line-height: 1.5;
+    }
+    
+    .ck-content ul,
+    .ck-content ol {
+        padding-left: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .ck-content strong {
+        font-weight: 600;
+    }
+    
+    .ck-content em {
+        font-style: italic;
+    }
+</style>
+{% endblock %} {% block content %}
+<div class="container mt-5 mb-5">
+    <div class="row mb-4">
+        <div class="col-md-8 offset-md-2">
+            <form action="" method="get" class="form-inline justify-content-center">
+                <div class="input-group w-100">
+                    <input type="text" name="job_title" class="form-control form-control-lg" placeholder="Search by Job Title..." value="{{ request.GET.job_title|default:'' }}">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary btn-lg" type="submit">Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <h2 class="text-center mb-5 text-dark font-weight-bold">Our Esteemed Professionals</h2>
+
+    <div class="d-flex flex-column align-items-center"> {# Use flex-column to stack the professional rows #} {% for professional in professionals %}
+        <div class="professional-row-card w-100">
+            <div class="professional-image-section">
+                {% if professional.image %}
+                <img src="{{ professional.image.url }}" alt="{{ professional.name }}" class="professional-profile-img"> {% else %}
+                <img src="https://placehold.co/400x200/cccccc/333333?text=No+Image" alt="No Image" class="professional-profile-img"> {% endif %}
+            </div>
+            <div class="professional-details-section">
+                <h3 class="professional-name">{{ professional.name }}</h3>
+                <p class="professional-job-title">{{ professional.job_title }}</p>
+
+                <div class="mb-3">
+                    <span class="rating-stars">
+                        {% for i in "12345" %}
+                            {% if professional.rating >= forloop.counter %}
+                            <i class="bi bi-star-fill"></i>
+                            {% elif professional.rating > forloop.counter0 %}
+                            <i class="bi bi-star-half"></i>
+                            {% else %}
+                            <i class="bi bi-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </span>
+                    <span class="rating-text">{{ professional.rating|floatformat:1 }} ({{ professional.num_reviews }} Reviews)</span>
+                </div>
+
+                <div class="row g-2">
+                    <div class="col-lg-6 col-md-12">
+                        {% if professional.location %}
+                        <div class="info-item">
+                            <i class="bi bi-geo-alt-fill"></i>
+                            <p><strong>Location:</strong> {{ professional.location }}</p>
+                        </div>
+                        {% endif %} {% if professional.phone_number %}
+                        <div class="info-item">
+                            <i class="bi bi-telephone-fill"></i>
+                            <p><strong>Phone:</strong> <a href="tel:{{ professional.phone_number }}" class="text-decoration-none text-dark">{{ professional.phone_number }}</a></p>
+                        </div>
+                        {% endif %} {% if professional.email %}
+                        <div class="info-item">
+                            <i class="bi bi-envelope-fill"></i>
+                            <p><strong>Email:</strong> <a href="mailto:{{ professional.email }}" class="text-decoration-none text-dark">{{ professional.email }}</a></p>
+                        </div>
+                        {% endif %} {% if professional.working_hours %}
+                        <div class="info-item">
+                            <i class="bi bi-clock-fill"></i>
+                            <p><strong>Working Hours:</strong> {{ professional.working_hours }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-6 col-md-12">
+                        {% if professional.business_description %}
+                        <div class="business-description">
+                            <h5 class="mb-1 text-dark"><i class="bi bi-briefcase-fill me-2"></i>Business Description:</h5>
+                            <div class="ck-content">{{ professional.business_description|safe }}</div>
+                        </div>
+                        {% endif %} {% if professional.products_services %}
+                        <div class="products-services mt-3">
+                            <h5 class="mb-1 text-dark"><i class="bi bi-tools me-2"></i>Services Offered:</h5>
+                            <div class="ck-content">{{ professional.products_services|safe }}</div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if professional.gallery_images.exists %}
+                <div class="text-center mt-auto">
+                    <a href="{% url 'professional_gallery' professional.id %}" class="btn btn-view-gallery">
+                            View Gallery <i class="bi bi-images"></i>
+                        </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <p class="lead text-muted">No professionals found at the moment. Please check back later!</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

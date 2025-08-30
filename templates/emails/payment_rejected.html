@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Rejected</title>
+</head>
+
+<body>
+    <p>Dear {{ levy.user.first_name }},</p>
+
+    <p>We regret to inform you that your payment for {{ levy.get_payment_for_display }} ({{ levy.get_month_display }} {{ levy.year }}) could not be confirmed by the admin.</p>
+
+    <p>Please contact your bank or reach out to the CDA excos for clarification.</p>
+
+    <p>Best regards,<br> Madandola Estate CDA</p>
+</body>
+
+</html>

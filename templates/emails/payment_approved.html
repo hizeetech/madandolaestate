@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Approved</title>
+</head>
+
+<body>
+    <p>Dear {{ levy.user.first_name }},</p>
+
+    <p>Your payment for {{ levy.get_payment_for_display }} ({{ levy.get_month_display }} {{ levy.year }}) has been approved by the admin.</p>
+
+    <p>Thank you for your prompt payment.</p>
+
+    <p>Best regards,<br> Madandola Estate CDA</p>
+</body>
+
+</html>

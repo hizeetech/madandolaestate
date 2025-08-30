@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Submitted - Madandola Estate CDA</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        
+        .content {
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 0 0 5px 5px;
+            border: 1px solid #ddd;
+        }
+        
+        .footer {
+            margin-top: 20px;
+            font-size: 0.8em;
+            color: #777;
+            text-align: center;
+        }
+        
+        .details {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border: 1px solid #eee;
+        }
+        
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>Madandola Estate CDA</h1>
+        <h2>Registration Submitted</h2>
+    </div>
+
+    <div class="content">
+        <p>Dear {{ user.first_name }},</p>
+
+        <p>Thank you for registering with Madandola Estate Community Development Association (CDA). Your registration has been received and is pending administrative approval.</p>
+
+        <div class="details">
+            <h3>Your Registration Details:</h3>
+            <p><strong>Full Name:</strong> {{ user.get_full_name }}</p>
+            <p><strong>Username:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Phone Number:</strong> {{ user.phone_number }}</p>
+            <p><strong>User Type:</strong> {{ user.get_user_type_display }}</p>
+            <p><strong>CDA:</strong> {{ user.cda }}</p>
+            <p><strong>Registration Date:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
+        </div>
+
+        <p>Our administration team will review your registration shortly. You will receive another email once your account has been approved.</p>
+
+        <p>If you have any questions or need to update your registration information, please contact our support team at <a href="mailto:madandolaestatecdas@gmail.com">madandolaestatecdas@gmail.com</a>.</p>
+
+        <p>Thank you for your patience.</p>
+
+        <p>Best regards,</p>
+        <p><strong>The Madandola Estate CDA Team</strong></p>
+    </div>
+
+    <div class="footer">
+        <p>© {% now "Y" %} Madandola Estate CDA. All rights reserved.</p>
+        <p>This is an automated message - please do not reply directly to this email.</p>
+    </div>
+</body>
+
+</html>

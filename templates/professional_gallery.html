@@ -1,0 +1,210 @@
+{% extends 'base.html' %} {% load static %} {% block extra_css %}
+<style>
+    /* Specific styles for the gallery pages (reused from artisan_gallery where applicable) */
+    
+    .gallery-container {
+        background-color: #ffffff;
+        border-radius: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .gallery-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .gallery-profile-img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 4px solid #10B981;
+        /* Emerald green border */
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        margin-bottom: 1rem;
+    }
+    
+    .gallery-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #047857;
+        /* Deep green */
+        margin-bottom: 0.5rem;
+    }
+    
+    .gallery-subtitle {
+        font-size: 1.3rem;
+        color: #555;
+        margin-bottom: 1.5rem;
+    }
+    
+    .gallery-grid-img {
+        width: 100%;
+        height: 250px;
+        /* Fixed height for gallery images */
+        object-fit: cover;
+        border-radius: 0.75rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: zoom-in;
+        /* Indicate interactivity */
+    }
+    
+    .gallery-grid-img:hover {
+        transform: scale(1.03);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+    
+    .gallery-item-wrapper {
+        position: relative;
+        overflow: hidden;
+        border-radius: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .image-description {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.6);
+        color: white;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+        transform: translateY(100%);
+        transition: transform 0.3s ease-in-out;
+        border-bottom-left-radius: 0.75rem;
+        border-bottom-right-radius: 0.75rem;
+    }
+    
+    .gallery-item-wrapper:hover .image-description {
+        transform: translateY(0);
+    }
+    
+    .info-section {
+        background-color: #f0fdf4;
+        /* Light green background */
+        border-radius: 1rem;
+        padding: 1.5rem;
+        margin-top: 2rem;
+        text-align: left;
+    }
+    
+    .info-section h4 {
+        color: #059669;
+        /* Darker emerald */
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+    
+    .info-section p {
+        margin-bottom: 0.5rem;
+        color: #333;
+    }
+    
+    .info-section i {
+        margin-right: 0.5rem;
+        color: #065F46;
+        /* Even darker emerald */
+    }
+    
+    .back-button-container {
+        text-align: center;
+        margin-top: 2.5rem;
+    }
+    
+    .btn-back {
+        background-color: #6B7280;
+        /* Gray for back button */
+        color: white;
+        border-radius: 0.75rem;
+        padding: 0.75rem 2rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    
+    .btn-back:hover {
+        background-color: #4B5563;
+        transform: translateY(-2px);
+    }
+</style>
+{% endblock %} {% block content %}
+<div class="container mt-5 mb-5">
+    {% if professional %}
+    <div class="gallery-container">
+        <div class="gallery-header">
+            {% if professional.image %}
+            <img src="{{ professional.image.url }}" alt="{{ professional.name }}" class="gallery-profile-img"> {% else %}
+            <img src="{% static 'images/placeholder_professional.jpg' %}" alt="No Image" class="gallery-profile-img"> {% endif %}
+            <h2 class="gallery-title">{{ professional.name }}</h2>
+            <p class="gallery-subtitle">{{ professional.job_title }}</p>
+            <div class="text-muted small">
+                <span class="rating-stars text-warning">
+                    {% comment %} Corrected star rating logic without 'mod' filter {% endcomment %}
+                    {% for i in "12345" %}
+                        {% if professional.rating >= forloop.counter %}
+                        <i class="bi bi-star-fill"></i>
+                        {% elif professional.rating > forloop.counter0 %} {# Check for half star if rating is between full stars #}
+                        <i class="bi bi-star-half"></i>
+                        {% else %}
+                        <i class="bi bi-star"></i>
+                        {% endif %}
+                    {% endfor %}
+                </span>
+                <span>{{ professional.rating|floatformat:1 }} ({{ professional.num_reviews }} Reviews)</span>
+            </div>
+        </div>
+
+        <hr class="my-4">
+
+        <h3 class="text-center mb-4 text-dark">Photo Gallery</h3>
+        {% if professional.gallery_images.exists %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for image in professional.gallery_images.all %}
+            <div class="col d-flex">
+                <div class="gallery-item-wrapper w-100">
+                    <img src="{{ image.image.url }}" alt="{{ image.description|default:professional.name }}" class="gallery-grid-img"> {% if image.description %}
+                    <div class="image-description">
+                        {{ image.description }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-4">
+            <p class="lead text-muted">No additional gallery images available for {{ professional.name }} yet.</p>
+        </div>
+        {% endif %}
+
+        <div class="info-section">
+            <h4><i class="bi bi-info-circle-fill"></i> More Details:</h4>
+            {% if professional.location %}
+            <p><i class="bi bi-geo-alt-fill"></i> <strong>Location:</strong> {{ professional.location }}</p>{% endif %} {% if professional.phone_number %}
+            <p><i class="bi bi-telephone-fill"></i> <strong>Phone:</strong> <a href="tel:{{ professional.phone_number }}" class="text-decoration-none text-dark">{{ professional.phone_number }}</a></p>{% endif %} {% if professional.email %}
+            <p><i class="bi bi-envelope-fill"></i> <strong>Email:</strong> <a href="mailto:{{ professional.email }}" class="text-decoration-none text-dark">{{ professional.email }}</a></p>{% endif %} {% if professional.working_hours %}
+            <p><i class="bi bi-clock-fill"></i> <strong>Working Hours:</strong> {{ professional.working_hours }}</p>{% endif %} {% if professional.business_description %}
+            <p class="mt-3"><i class="bi bi-briefcase-fill"></i> <strong>Business Description:</strong></p>
+            <div class="ck-content">{{ professional.business_description|safe }}</div>
+            {% endif %} {% if professional.products_services %}
+            <p class="mt-3"><i class="bi bi-tools"></i> <strong>Services Offered:</strong></p>
+            <div class="ck-content">{{ professional.products_services|safe }}</div>
+            {% endif %}
+        </div>
+
+        <div class="back-button-container">
+            <a href="{% url 'professionals_list' %}" class="btn btn-back">
+                <i class="bi bi-arrow-left"></i> Back to Professionals List
+            </a>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-warning text-center" role="alert">
+        Professional not found.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

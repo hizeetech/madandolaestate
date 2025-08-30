@@ -1,0 +1,38 @@
+{% extends 'admin/change_list.html' %}
+
+{% block extrahead %}
+{{ block.super }}
+<script type="text/javascript">
+function toggleDescription(pk) {
+    var shortSpan = document.getElementById('title-' + pk + '-short');
+    var fullSpan = document.getElementById('title-' + pk + '-full');
+    var toggleLink = document.getElementById('title-' + pk + '-toggle');
+
+    if (shortSpan.style.display === 'none') {
+        shortSpan.style.display = 'inline';
+        fullSpan.style.display = 'none';
+        toggleLink.innerText = 'Read more';
+    } else {
+        shortSpan.style.display = 'none';
+        fullSpan.style.display = 'inline';
+        toggleLink.innerText = 'Read less';
+    }
+}
+
+function toggleContent(pk) {
+    var shortSpan = document.getElementById('content-' + pk + '-short');
+    var fullSpan = document.getElementById('content-' + pk + '-full');
+    var toggleLink = document.getElementById('content-' + pk + '-toggle');
+
+    if (shortSpan.style.display === 'none') {
+        shortSpan.style.display = 'inline';
+        fullSpan.style.display = 'none';
+        toggleLink.innerText = 'Read more';
+    } else {
+        shortSpan.style.display = 'none';
+        fullSpan.style.display = 'inline';
+        toggleLink.innerText = 'Read less';
+    }
+}
+</script>
+{% endblock %}

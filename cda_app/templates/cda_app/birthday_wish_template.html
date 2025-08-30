@@ -1,0 +1,218 @@
+<div class="modal fade" id="birthdayWishModal" tabindex="-1" aria-labelledby="birthdayWishModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content" style="background-color: #f8f9fa; border-radius: 10px;">
+            <div class="modal-header">
+                <h5 class="modal-title text-center w-100 fw-bold" id="birthdayWishModalLabel">Happy Birthday {{ birthday_wish.name }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <style>
+                    @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+                    /* Placeholder for Mugio, FREEKICK - Brush Font, and Amsterdam 2.0 Slant. These fonts are not available on Google Fonts.
+                       You will need to self-host them or use a service where they are available. */
+                    
+                    .brush-font {
+                        font-family: 'Brush Script MT', cursive;
+                        /* Generic brush font as a placeholder */
+                    }
+                    
+                    .birthday-card {
+                        width: 100%;
+                        height: auto;
+                        background-color: rgba(255, 255, 255, 0.9);
+                        /* Slightly transparent white background for content */
+                        border-radius: 15px;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        padding: 20px;
+                        box-sizing: border-box;
+                        position: relative;
+                        overflow: hidden;
+                        {
+                            % if birthday_wish.frame_background %
+                        }
+                        background-image: url('{{ birthday_wish.frame_background.url }}');
+                        background-size: cover;
+                        background-position: center;
+                        background-repeat: no-repeat;
+                        {
+                            % endif %
+                        }
+                    }
+                    
+                    .header {
+                        display: flex;
+                        align-items: center;
+                        width: 100%;
+                        padding-bottom: 10px;
+                        border-bottom: 1px solid #eee;
+                        margin-bottom: 20px;
+                    }
+                    
+                    .logo-container {
+                        width: 80px;
+                        height: 80px;
+                        margin-right: 15px;
+                    }
+                    
+                    .logo-container img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: contain;
+                    }
+                    
+                    .association-info {
+                        font-family: Arial, sans-serif;
+                        font-size: 14px;
+                        color: #333;
+                    }
+                    
+                    .happy-birthday {
+                        font-family: 'Great Vibes', cursive;
+                        /* Mimicking the script font */
+                        font-size: 72px;
+                        color: #333;
+                        margin-top: 20px;
+                        text-align: center;
+                        line-height: 1;
+                    }
+                    
+                    .main-content {
+                        display: flex;
+                        width: 100%;
+                        flex-grow: 1;
+                        flex-wrap: wrap;
+                        /* Allow wrapping for smaller screens */
+                    }
+                    
+                    .image-section {
+                        flex: 1;
+                        /* Take full width on small screens */
+                        min-width: 250px;
+                        /* Minimum width before wrapping */
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        padding: 20px;
+                    }
+                    
+                    .image-section img {
+                        max-width: 100%;
+                        max-height: 100%;
+                        object-fit: contain;
+                        border-radius: 8px;
+                    }
+                    
+                    .details-section {
+                        flex: 1;
+                        /* Take full width on small screens */
+                        min-width: 250px;
+                        /* Minimum width before wrapping */
+                        padding: 20px;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: flex-start;
+                        align-items: flex-start;
+                    }
+                    
+                    .calendar {
+                        font-family: 'Courier New', Courier, monospace;
+                        font-size: 24px;
+                        text-align: center;
+                        margin-bottom: 20px;
+                        color: #555;
+                    }
+                    
+                    .calendar span {
+                        display: inline-block;
+                        width: 40px;
+                        height: 40px;
+                        line-height: 40px;
+                        border-radius: 50%;
+                        margin: 5px;
+                        background-color: #e0e0e0;
+                    }
+                    
+                    .calendar .highlight {
+                        background-color: #aaffaa;
+                        /* Green highlight for birthday */
+                        border: 2px solid #008000;
+                    }
+                    
+                    .name {
+                        font-family: Georgia, serif;
+                        font-size: 48px;
+                        font-weight: bold;
+                        color: #000;
+                        margin-bottom: 15px;
+                    }
+                    
+                    .wishes-text {
+                        font-family: 'Times New Roman', serif;
+                        font-size: 18px;
+                        color: #444;
+                        text-align: justify;
+                        line-height: 1.6;
+                    }
+                    
+                    .footer {
+                        width: 100%;
+                        text-align: center;
+                        padding-top: 10px;
+                        border-top: 1px solid #eee;
+                        margin-top: 20px;
+                        font-family: Arial, sans-serif;
+                        font-size: 12px;
+                        color: #666;
+                    }
+                </style>
+                <div class="birthday-card">
+                    <div class="header">
+                        {% if birthday_wish.logo %}
+                        <div class="logo-container">
+                            <img src="{{ birthday_wish.logo.url }}" alt="Association Logo">
+                        </div>
+                        {% endif %}
+                        <div class="association-info">
+                            <p style="font-family: sans-serif; font-size: 28px; color: #000; text-align: center; width: 100%;">MADANDOLA UNITY ESTATE</p>
+                        </div>
+                    </div>
+
+                    <p class="brush-font" style="font-size: 35px; color: #000; text-align: center; width: 100%; margin-top: -10px; margin-bottom: 10px;">Wishes</p>
+
+                    <h1 class="happy-birthday">{{ birthday_wish.heading }}</h1>
+
+                    <div class="main-content">
+
+                        <div class="image-section">
+                            {% if birthday_wish.image %}
+                            <img src="{{ birthday_wish.image.url }}" alt="Birthday Person"> {% endif %}
+                        </div>
+                        <div class="details-section">
+                            <div class="calendar">
+                                <p style="font-family: 'Dancing Script', cursive; font-size: 20px; text-align: center;">Wednesday July 3rd, 2025</p>
+                                <p>S M T W T F S</p>
+                                <p>
+                                    {% comment %} This is a simplified calendar. For a real dynamic calendar, more complex logic would be needed. {% endcomment %} {% for i in "1234567890123456789012345678901"|make_list %} {% if forloop.counter == birthday_wish.birth_date.day %}
+                                    <span class="highlight">{{ forloop.counter }}</span> {% else %}
+                                    <span>{{ forloop.counter }}</span> {% endif %} {% if forloop.counter|divisibleby:7 %}<br>{% endif %} {% endfor %}
+                                </p>
+                            </div>
+                            <h2 class="name">{{ birthday_wish.name }}</h2>
+                            <p class="wishes-text">{{ birthday_wish.wishes_text }}</p>
+                        </div>
+                    </div>
+
+                    <div class="footer" style="text-align: center;">
+                        <p style="font-family: sans-serif; font-size: 16px; color: #666; text-align: center;">Harmony CDA || Unity CDA || Valley-View CDA</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer p-3">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

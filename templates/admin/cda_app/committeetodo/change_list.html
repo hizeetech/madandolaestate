@@ -1,0 +1,22 @@
+{% extends 'admin/change_list.html' %}
+
+{% block extrahead %}
+{{ block.super }}
+<script type="text/javascript">
+function toggleTask(pk) {
+    var shortSpan = document.getElementById('task-' + pk + '-short');
+    var fullSpan = document.getElementById('task-' + pk + '-full');
+    var toggleLink = document.getElementById('task-' + pk + '-toggle');
+
+    if (shortSpan.style.display === 'none') {
+        shortSpan.style.display = 'inline';
+        fullSpan.style.display = 'none';
+        toggleLink.innerText = 'Read more';
+    } else {
+        shortSpan.style.display = 'none';
+        fullSpan.style.display = 'inline';
+        toggleLink.innerText = 'Read less';
+    }
+}
+</script>
+{% endblock %}

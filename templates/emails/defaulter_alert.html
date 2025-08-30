@@ -1,0 +1,91 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Outstanding Dues Reminder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eeeeee;
+        }
+        
+        .header h1 {
+            color: #dc3545;
+            /* Red for alert */
+        }
+        
+        .content {
+            padding: 20px 0;
+            line-height: 1.6;
+            color: #555555;
+        }
+        
+        .content p {
+            margin-bottom: 10px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #eeeeee;
+            font-size: 12px;
+            color: #aaaaaa;
+        }
+        
+        .button {
+            display: inline-block;
+            background-color: #007bff;
+            color: #ffffff !important;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>Outstanding Dues Reminder</h1>
+        </div>
+        <div class="content">
+            <p>Dear {{ user.first_name }} {{ user.last_name }},</p>
+            <p>This is a friendly reminder that your community dues are outstanding.</p>
+            <p>Please ensure to settle your dues at your earliest convenience to continue enjoying full community benefits.</p>
+            <p>You can log in to your portal to view your outstanding balance and make a payment:</p>
+            <p><a href="{{ login_url }}" class="button">Go to Portal</a></p>
+            <p>If you believe this is an error or have already made the payment, please contact the administration.</p>
+            <p>Thank you for your cooperation.</p>
+            <p>Best regards,</p>
+            <p>The Community Development Association Team</p>
+        </div>
+        <div class="footer">
+            <p>This is an automated message - please do not reply directly to this email.</p>
+            <p>&copy; {% now "Y" %} Community Development Association. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+
+</html>

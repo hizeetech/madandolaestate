@@ -1,0 +1,50 @@
+{% extends 'base.html' %} {% load humanize %} {% block title %}Admin Dashboard{% endblock %} {% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Admin Dashboard</h1>
+
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Pending Users</h5>
+                    <p class="card-text display-4">{{ pending_users_count }}</p>
+                    <a href="{% url 'admin_user_management' %}" class="btn btn-light">Manage Users</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">Pending Adverts</h5>
+                    <p class="card-text display-4">{{ pending_adverts_count }}</p>
+                    <a href="{% url 'admin_advert_approval' %}" class="btn btn-light">Review Adverts</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">Total Members</h5>
+                    <p class="card-text display-4">{{ total_users_count }}</p>
+                    <a href="{% url 'admin_user_management' %}" class="btn btn-light">View All</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h4>Quick Actions</h4>
+        </div>
+        <div class="card-body">
+            <div class="d-grid gap-2 d-md-flex">
+                <a href="{% url 'admin_user_management' %}" class="btn btn-primary me-md-2">User Management</a>
+                <a href="{% url 'admin_advert_approval' %}" class="btn btn-warning me-md-2">Advert Approval</a>
+                <a href="/admin/" class="btn btn-secondary">Advanced Admin</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

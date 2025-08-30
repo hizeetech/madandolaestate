@@ -1,0 +1,40 @@
+{% extends 'base.html' %} {% block title %}Birthday Calendar - Madandola Estate CDA{% endblock %} {% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-white">
+            <h2 class="h5 mb-0">Community Birthday Calendar</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {% for month_num, month_birthdays in birthdays_by_month.items %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="h6 mb-0">{{ month_num|date:"F" }}</h3>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                {% for birthday in month_birthdays %}
+                                <li class="list-group-item {% if birthday.month == today_month and birthday.day == today_day %}bg-warning bg-opacity-10{% endif %}">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong>{{ birthday.day }}</strong> - {{ birthday.name }} {% if birthday.month == today_month and birthday.day == today_day %}
+                                            <span class="badge bg-warning text-dark ms-2">Today!</span> {% endif %}
+                                        </div>
+                                        {% if birthday.image %}
+                                        <img src="{{ birthday.image.url }}" class="rounded-circle" width="40" height="40" alt="{{ birthday.name }}"> {% endif %}
+                                    </div>
+                                </li>
+                                {% empty %}
+                                <li class="list-group-item">No birthdays this month</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

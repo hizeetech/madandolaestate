@@ -1,0 +1,41 @@
+/* General rule */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Keep profile and circle images neat */
+.rounded-circle,
+.img-thumbnail,
+.card-img-top {
+    object-fit: cover;
+}
+
+/* Leadership/Executive Members */
+.executive-members img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+/* Birthday Celebrants */
+.birthday-celebrants img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+/* Event images */
+.event-card img {
+    max-height: 250px;
+    width: 100%;
+    object-fit: cover;
+}
+
+/* Modal images (zoomed) */
+#modalImage {
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+    cursor: grab;
+}

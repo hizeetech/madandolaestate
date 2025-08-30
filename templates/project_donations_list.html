@@ -1,0 +1,159 @@
+{% extends 'base.html' %} {% load humanize %} {% load static %} {% block title %}Project Donations{% endblock %} {% block extra_js %}
+<script src="https://unpkg.com/@panzoom/panzoom/dist/panzoom.min.js"></script>
+<script>
+    function toggleDescription(projectId) {
+        var shortDesc = document.getElementById('short-description-' + projectId);
+        var fullDesc = document.getElementById('full-description-' + projectId);
+        var toggleLink = document.getElementById('toggle-link-' + projectId);
+
+        if (fullDesc.style.display === 'none') {
+            shortDesc.style.display = 'none';
+            fullDesc.style.display = 'inline';
+            toggleLink.innerText = 'Read Less';
+        } else {
+            shortDesc.style.display = 'inline';
+            fullDesc.style.display = 'none';
+            toggleLink.innerText = 'Read More';
+        }
+    }
+
+    let panzoomInstance;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const imageModal = document.getElementById('imageModal');
+        const donateModal = document.getElementById('donateModal');
+
+        imageModal.addEventListener('show.bs.modal', function(event) {
+            const trigger = event.relatedTarget;
+            const imageUrl = trigger.getAttribute('data-bs-src');
+            const modalImage = document.getElementById('modalImage');
+
+            modalImage.src = imageUrl;
+
+            modalImage.onload = function() {
+                if (panzoomInstance) panzoomInstance.destroy();
+                panzoomInstance = Panzoom(modalImage, {
+                    maxScale: 5,
+                    contain: 'outside',
+                });
+                modalImage.parentElement.addEventListener('wheel', panzoomInstance.zoomWithWheel);
+            };
+        });
+
+        imageModal.addEventListener('hidden.bs.modal', function() {
+            if (panzoomInstance) {
+                panzoomInstance.destroy();
+                panzoomInstance = null;
+            }
+        });
+
+        donateModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            document.getElementById('projectTitle').innerText = button.getAttribute('data-title');
+            document.getElementById('bankName').innerText = button.getAttribute('data-bank');
+            document.getElementById('accountNumber').innerText = button.getAttribute('data-account');
+            document.getElementById('beneficiary').innerText = button.getAttribute('data-beneficiary');
+            document.getElementById('referenceNumber').innerText = button.getAttribute('data-reference');
+        });
+    });
+</script>
+{% endblock extra_js %} {% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Project Donations</h2>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>S/N</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Reference Number</th>
+                    <th>Estimated Cost</th>
+                    <th>Images</th>
+                    <th>Actions</th>
+                    <th>Payment Proof</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for project in project_donations %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ project.title|striptags }}</td>
+                    <td>
+                        <span id="short-description-{{ project.id }}">{{ project.description|striptags|wordwrap:5|truncatechars:50 }}</span>
+                        <span id="full-description-{{ project.id }}" style="display: none;">{{ project.description|striptags }}</span> {% if project.description|wordcount > 5 %}
+                        <a href="#" onclick="toggleDescription({{ project.id }}); return false;" id="toggle-link-{{ project.id }}">Read More</a> {% endif %}
+                    </td>
+                    <td>{{ project.reference_number }}</td>
+                    <td>₦{{ project.estimated_cost|floatformat:2|intcomma }}</td>
+                    <td>
+                        {% for image in project.images.all %}
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal" data-bs-src="{{ image.image.url }}">
+                            <img src="{{ image.image.url }}" alt="Project Image" width="50" height="50" class="img-thumbnail m-1">
+                        </a>
+                        {% empty %} No Images {% endfor %}
+                    </td>
+                    <td>
+                        <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#donateModal" data-title="{{ project.title|striptags }}" data-bank="{{ project.bank_name }}" data-account="{{ project.account_number }}" data-beneficiary="{{ project.beneficiary }}"
+                            data-reference="{{ project.reference_number }}">
+                            <i class="bi bi-cash-coin"></i> Donate
+                        </button>
+                    </td>
+                    <td>
+                        <a href="{% url 'upload_donation_proof' donation_id=project.id %}" class="btn btn-info btn-sm">
+                            <i class="bi bi-receipt"></i> Payment Proof
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7">No project donations available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+<!-- Zoom Image Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content bg-dark text-white border-0">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Zoom Image</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0 m-0 d-flex justify-content-center align-items-center" style="overflow: hidden;">
+                <div id="panzoom-container" class="w-100 h-100 d-flex justify-content-center align-items-center" style="overflow: hidden;">
+                    <img src="" id="modalImage" class="img-fluid" style="cursor: grab; max-width: none;" alt="Zoom Image">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Donate Modal -->
+<div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="donateModalLabel">Donation Details</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <h5 id="projectTitle" class="text-success mb-3"></h5>
+                <p><strong>Bank Name:</strong> <span id="bankName"></span></p>
+                <p><strong>Account Number:</strong> <span id="accountNumber"></span></p>
+                <p><strong>Beneficiary:</strong> <span id="beneficiary"></span></p>
+                <p><strong>Reference Number:</strong> <span id="referenceNumber"></span></p>
+                <div class="alert alert-info mt-3">
+                    Please use the above details to make your donation. Thank you for supporting this project!
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Donation Proof</title>
+</head>
+
+<body>
+    <h2>New Donation Proof Submitted</h2>
+    <p>A new donation proof has been submitted for the project "{{ proof.project_donation.title }}".</p>
+    <p><strong>Details:</strong></p>
+    <ul>
+        <li>Donator: {{ proof.donator_name }}</li>
+        <li>WhatsApp: {{ proof.whatsapp_number }}</li>
+        <li>Amount: ₦{{ proof.donated_amount }}</li>
+        <li>Reference: {{ proof.donation_reference_number }}</li>
+    </ul>
+    <p>Please review this submission in the admin panel.</p>
+</body>
+
+</html>

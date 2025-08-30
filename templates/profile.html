@@ -1,0 +1,329 @@
+<!-- templates/profile.html -->
+{% extends 'base.html' %} {% block title %}My Profile{% endblock %} {% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4>Profile Information</h4>
+                </div>
+                <div class="card-body">
+                    {% if user.image %}
+                    <img src="{{ user.image.url }}" class="img-fluid rounded-circle mb-3" style="width: 150px; height: 150px;"> {% endif %}
+                    <p><strong>Username:</strong> {{ user.username }}</p>
+                    <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    <p><strong>Phone:</strong> {{ user.phone_number }}</p>
+                    <p><strong>User Type:</strong> {{ user.get_user_type_display }}</p>
+                    <p><strong>CDA:</strong> {{ user.cda }}</p>
+                    <a href="{% url 'edit_profile' %}" class="btn btn-primary">Edit Profile</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <ul class="nav nav-tabs" id="profileTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="regular-levies-tab" data-bs-toggle="tab" data-bs-target="#regular-levies" type="button" role="tab">
+                        Regular Levies/Dues
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="outstanding-tab" data-bs-toggle="tab" data-bs-target="#outstanding" type="button" role="tab">
+                        Outstanding Levies
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab">
+                        Payment History
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="profileTabsContent">
+                <!-- Regular Levies/Dues Tab -->
+                <div class="tab-pane fade show active" id="regular-levies" role="tabpanel">
+                    <div class="card mt-3">
+                        <div class="card-header bg-light">
+                            <h4>Regular Levies/Dues</h4>
+                        </div>
+                        <div class="card-body">
+                            {% if regular_levies %}
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Month</th>
+                                            <th>Year</th>
+                                            <th>Payment For</th>
+                                            <th>Amount (₦)</th>
+                                            <th>CDA</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for levy in regular_levies %}
+                                        <tr>
+                                            <td>{{ levy.get_month_display }}</td>
+                                            <td>{{ levy.year }}</td>
+                                            <td>{{ levy.get_payment_for_display }}</td>
+                                            <td>{{ levy.amount }}</td>
+                                            <td>{{ levy.cda }}</td>
+                                            <td>
+                                                {% if levy.status == 'unpaid' or levy.status == 'rejected' %}
+                                                <a href="{% url 'upload_regular_levy_proof' levy.id %}" class="btn btn-primary btn-sm">
+                                                    Pay Now
+                                                </a> {% elif levy.status == 'pending' %}
+                                                <button class="btn btn-warning btn-sm" disabled>
+                                                    Pending
+                                                </button> {% elif levy.status == 'paid' %}
+                                                <button class="btn btn-success btn-sm" disabled>
+                                                    Paid
+                                                </button> {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <div class="alert alert-info">No regular levies found.</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Outstanding Levies Tab -->
+                <div class="tab-pane fade" id="outstanding" role="tabpanel">
+                    <div class="card mt-3">
+                        <div class="card-header bg-light">
+                            <h4>Outstanding Levies</h4>
+                        </div>
+                        <div class="card-body">
+                            {% if outstanding_levies %}
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Payment For</th>
+                                            <th>Amount (₦)</th>
+                                            <th>CDA</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for category, details in outstanding_levies.items %}
+                                        <tr>
+                                            <td>{{ category }}</td>
+                                            <td>{{ details.total_amount }}</td>
+                                            <td>{{ user.cda }}</td>
+                                            <td>
+                                                <button class="btn btn-primary btn-sm pay-now-btn" data-bs-toggle="modal" data-bs-target="#paymentModal" data-category="{{ category }}">
+                                                    Pay Now
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <div class="alert alert-success">No outstanding levies. Good job!</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment History Tab -->
+                <div class="tab-pane fade" id="history" role="tabpanel">
+                    <div class="card mt-3">
+                        <div class="card-header bg-light">
+                            <h4>Payment History</h4>
+                        </div>
+                        <div class="card-body">
+                            {% if payment_history %}
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Month/Year</th>
+                                            <th>Payment For</th>
+                                            <th>Amount (₦)</th>
+                                            <th>Proof</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for payment in payment_history %}
+                                        <tr>
+                                            <td>{{ payment.updated_at|date:"Y-m-d" }}</td>
+                                            <td>{{ payment.get_month_display }} {{ payment.year }}</td>
+                                            <td>{{ payment.get_payment_for_display }}</td>
+                                            <td>{{ payment.amount }}</td>
+                                            <td>
+                                                {% if payment.proof_of_payment %}
+                                                <a href="{{ payment.proof_of_payment.url }}" target="_blank" class="btn btn-info btn-sm">
+                                                    View Proof
+                                                </a> {% else %}
+                                                <span class="text-muted">No Proof</span> {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <div class="alert alert-info">No payment history found.</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- <input class="form-control" type="file" id="proofImage" name="proof_image" required accept="image/jpeg, image/png">
+<div class="form-text">Upload a clear image of your payment receipt (JPEG or PNG, max 2MB).</div> -->
+</div>
+</div>
+<!-- <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+    <button type="submit" class="btn btn-primary">Submit Proof</button>
+</div> -->
+</form>
+</div>
+</div>
+</div>
+
+<!-- Feedback Modal -->
+<div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="feedbackModalLabel">Status</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="feedbackMessage">
+                <!-- Message will be inserted here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} {% block scripts %}
+<script>
+    $(document).ready(function() {
+        // Store the current payment context
+        var currentPaymentContext = {};
+
+        $('.pay-now-btn').click(function() {
+            // Clear previous context
+            currentPaymentContext = {};
+
+            // Set the new context based on what's available
+            if ($(this).data('levy-id')) {
+                currentPaymentContext.levy_id = $(this).data('levy-id');
+                $('#levyId').val(currentPaymentContext.levy_id);
+                $('#category').val('');
+            } else if ($(this).data('category')) {
+                currentPaymentContext.category = $(this).data('category');
+                $('#category').val(currentPaymentContext.category);
+                $('#levyId').val('');
+            }
+        });
+
+        $('#paymentForm').submit(function(e) {
+            e.preventDefault();
+
+            // Clear previous feedback
+            $('#feedbackMessage').empty();
+
+            // Validate file
+            const fileInput = document.getElementById('proofImage');
+            if (!fileInput.files.length) {
+                $('#feedbackMessage').html('<div class="alert alert-danger">Please select a payment proof file</div>');
+                $('#feedbackModal').modal('show');
+                return;
+            }
+
+            if (fileInput.files[0].size > 5 * 1024 * 1024) { // 5MB
+                $('#feedbackMessage').html('<div class="alert alert-danger">File size must be less than 5MB</div>');
+                $('#feedbackModal').modal('show');
+                return;
+            }
+
+            // Create FormData
+            const formData = new FormData();
+            formData.append('proof_image', fileInput.files[0]);
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+            // Add either levy_id or category
+            if (currentPaymentContext.levy_id) {
+                formData.append('levy_id', currentPaymentContext.levy_id);
+            } else if (currentPaymentContext.category) {
+                formData.append('category', currentPaymentContext.category);
+            } else {
+                $('#feedbackMessage').html('<div class="alert alert-danger">Payment context missing. Please try again.</div>');
+                $('#feedbackModal').modal('show');
+                return;
+            }
+
+            // Show loading state
+            $('#paymentModal').find('button[type="submit"]').prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...');
+
+            // Submit the form
+            $.ajax({
+                url: "{% url 'upload_payment_proof' %}",
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    $('#paymentModal').modal('hide');
+                    if (response.success) {
+                        // Update UI without reloading
+                        if (response.levy_id) {
+                            // Update single row
+                            $(`button[data-levy-id="${response.levy_id}"]`)
+                                .removeClass('btn-primary')
+                                .addClass('btn-warning')
+                                .html('Pending')
+                                .prop('disabled', true);
+                        } else if (response.category) {
+                            // Update all rows for this category
+                            $(`button[data-category="${response.category}"]`)
+                                .removeClass('btn-primary')
+                                .addClass('btn-warning')
+                                .html('Pending')
+                                .prop('disabled', true);
+                        }
+
+                        $('#feedbackMessage').html('<div class="alert alert-success">' + response.message + '</div>');
+                    } else {
+                        $('#feedbackMessage').html('<div class="alert alert-danger">' + (response.error || 'An error occurred') + '</div>');
+                    }
+                    $('#feedbackModal').modal('show');
+                },
+                error: function(xhr) {
+                    let errorMsg = 'An error occurred';
+                    try {
+                        const data = JSON.parse(xhr.responseText);
+                        errorMsg = data.error || Object.values(data.errors).join(', ');
+                    } catch (e) {
+                        errorMsg = xhr.statusText;
+                    }
+                    $('#feedbackMessage').html('<div class="alert alert-danger">' + errorMsg + '</div>');
+                    $('#feedbackModal').modal('show');
+                },
+                complete: function() {
+                    $('#paymentModal').find('button[type="submit"]').prop('disabled', false).html('Submit Proof');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

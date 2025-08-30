@@ -1,0 +1,31 @@
+{% extends 'base.html' %} {% block title %}{{ title }}{% endblock %} {% block content %}
+<div class="container mt-4">
+    <h1 class="text-center my-4">{{ title }}</h1>
+    <div class="row">
+        {% for member in executive_members %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                {% if member.image %}
+                <img src="{{ member.image.url }}" class="card-img-top" alt="{{ member.name }}"> {% else %}
+                <img src="/static/images/default_executive.png" class="card-img-top" alt="Default Image"> {% endif %}
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ member.name }}</h5>
+                    <p class="card-text"><strong>Position:</strong> {{ member.position }}</p>
+                    {% if member.phone_number %}
+                    <p class="card-text"><strong>Phone:</strong> {{ member.phone_number }}</p>
+                    {% endif %} {% if member.start_date and member.end_date %}
+                    <p class="card-text"><strong>Tenure:</strong> {{ member.start_date|date:"M Y" }} - {{ member.end_date|date:"M Y" }}</p>
+                    {% elif member.start_date %}
+                    <p class="card-text"><strong>Tenure:</strong> From {{ member.start_date|date:"M Y" }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p class="text-center">No executive members found for this category.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

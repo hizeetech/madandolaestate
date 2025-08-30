@@ -1,0 +1,89 @@
+{% extends 'base.html' %} {% load static %} {% block title %}{{ committee.name }} - Madandola Estate CDA{% endblock %} {% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">{{ committee.name }}</h1>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Description</h4>
+        </div>
+        <div class="card-body">
+            <p>{{ committee.description|safe|default:"No description available." }}</p>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Roles and Responsibilities</h4>
+        </div>
+        <div class="card-body">
+            <p>{{ committee.roles_responsibilities|safe|default:"No roles and responsibilities defined." }}</p>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Members</h4>
+        </div>
+        <div class="card-body">
+            {% if members %}
+            <div class="row">
+                {% for member in members %}
+                <div class="col-md-4 text-center mb-3">
+                    {% if member.image %}
+                    <img src="{{ member.image.url }}" alt="{{ member.name }}" class="rounded-circle mb-2" width="100" height="100"> {% else %}
+                    <img src="{% static 'images/default_profile.png' %}" alt="Default Image" class="rounded-circle mb-2" width="100" height="100"> {% endif %}
+                    <h5>{{ member.name }}</h5>
+                    <p><em>{{ member.post }}</em></p>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>No members in this committee yet.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>To-Do List</h4>
+        </div>
+        <div class="card-body">
+            {% if todos %}
+            <ul class="list-group">
+                {% for todo in todos %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ todo.task|striptags }} {% if todo.is_completed %}
+                    <span class="badge badge-success badge-pill">Completed</span> {% else %}
+                    <span class="badge badge-warning badge-pill">Pending</span> {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No to-do items for this committee yet.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Achievements</h4>
+        </div>
+        <div class="card-body">
+            {% if achievements %}
+            <ul class="list-group">
+                {% for achievement in achievements %}
+                <li class="list-group-item">
+                    <h5>{{ achievement.title|striptags }}</h5>
+                    <p>{{ achievement.description|striptags }}</p>
+                    <small class="text-muted">Achieved on: {{ achievement.date|date:"M d, Y" }}</small>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No achievements recorded for this committee yet.</p>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

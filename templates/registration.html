@@ -1,0 +1,164 @@
+{% extends 'base.html' %} {% load widget_tweaks %} {% block title %}Register - Madandola Estate CDA<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const passwordInput = document.getElementById('{{ form.password1.id_for_label }}');
+        const feedbackDiv = document.getElementById('password-strength-feedback');
+
+        passwordInput.addEventListener('input', function() {
+            const password = passwordInput.value;
+            let strength = 0;
+            let feedback = '';
+
+            const hasLowerCase = /[a-z]/.test(password);
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasNumbers = /\d/.test(password);
+            const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+
+            if (hasLowerCase) strength++;
+            if (hasUpperCase) strength++;
+            if (hasNumbers) strength++;
+            if (hasSpecialChar) strength++;
+            if (password.length >= 8) strength++;
+
+            let strengthText = '';
+            let strengthColor = '';
+
+            if (strength === 0) {
+                strengthText = 'Very Weak';
+                strengthColor = 'text-danger';
+            } else if (strength === 1) {
+                strengthText = 'Weak';
+                strengthColor = 'text-danger';
+            } else if (strength === 2) {
+                strengthText = 'Moderate';
+                strengthColor = 'text-warning';
+            } else if (strength === 3) {
+                strengthText = 'Good';
+                strengthColor = 'text-info';
+            } else if (strength >= 4) {
+                strengthText = 'Strong';
+                strengthColor = 'text-success';
+            }
+
+            feedback += `<p class="${strengthColor}">Password Strength: <strong>${strengthText}</strong></p>`;
+            feedback += '<ul class="list-unstyled small">';
+            feedback += `<li class="${hasLowerCase ? 'text-success' : 'text-danger'}">${hasLowerCase ? '&#10004;' : '&#10008;'} At least one lowercase letter</li>`;
+            feedback += `<li class="${hasUpperCase ? 'text-success' : 'text-danger'}">${hasUpperCase ? '&#10004;' : '&#10008;'} At least one uppercase letter</li>`;
+            feedback += `<li class="${hasNumbers ? 'text-success' : 'text-danger'}">${hasNumbers ? '&#10004;' : '&#10008;'} At least one number</li>`;
+            feedback += `<li class="${hasSpecialChar ? 'text-success' : 'text-danger'}">${hasSpecialChar ? '&#10004;' : '&#10008;'} At least one special character</li>`;
+            feedback += `<li class="${password.length >= 8 ? 'text-success' : 'text-danger'}">${password.length >= 8 ? '&#10004;' : '&#10008;'} Minimum 8 characters long</li>`;
+            feedback += '</ul>';
+
+            feedbackDiv.innerHTML = feedback;
+        });
+    });
+</script>
+{% endblock %} {% block content %} {% load static %}
+<link rel="stylesheet" href="{% static 'css/custom.css' %}">
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">Register</div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="{{ form.first_name.id_for_label }}">First Name</label> {{ form.first_name|add_class:"form-control" }}
+                                {% if form.first_name.errors %}
+                                <div class="text-danger small">{{ form.first_name.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="{{ form.last_name.id_for_label }}">Last Name</label> {{ form.last_name|add_class:"form-control" }}
+                                {% if form.last_name.errors %}
+                                <div class="text-danger small">{{ form.last_name.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="{{ form.username.id_for_label }}">Username</label> {{ form.username|add_class:"form-control" }}
+                        {% if form.username.errors %}
+                        <div class="text-danger small">{{ form.username.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="{{ form.email.id_for_label }}">Email</label> {{ form.email|add_class:"form-control" }}
+                        {% if form.email.errors %}
+                        <div class="text-danger small">{{ form.email.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="{{ form.phone_number.id_for_label }}">Phone Number</label> {{ form.phone_number|add_class:"form-control" }}
+                        {% if form.phone_number.errors %}
+                        <div class="text-danger small">{{ form.phone_number.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label>User Type</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="user_type" id="landlord" value="landlord">
+                            <label class="form-check-label" for="landlord">Landlord</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="user_type" id="tenant" value="tenant" checked>
+                            <label class="form-check-label" for="tenant">Tenant</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="{{ form.cda.id_for_label }}">CDA</label> {{ form.cda|add_class:"form-control" }}
+                        {% if form.cda.errors %}
+                        <div class="text-danger small">{{ form.cda.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="card-header bg-primary text-white form-group mb-3 profile-image-upload">
+                        <label for="{{ form.image.id_for_label }}">Profile Image</label> {{ form.image|add_class:"form-control-file" }}
+                        {% if form.image.errors %}
+                        <div class="text-danger small">{{ form.image.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="{{ form.password1.id_for_label }}">Password</label> {{ form.password1|add_class:"form-control" }}
+                        {% if form.password1.errors %}
+                        <div class="text-danger small">{{ form.password1.errors }}</div>
+                        {% endif %}
+                        <div id="password-strength-feedback" class="mt-2"></div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="{{ form.password2.id_for_label }}">Confirm Password</label> {{ form.password2|add_class:"form-control" }}
+                        {% if form.password2.errors %}
+                        <div class="text-danger small">{{ form.password2.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group col-md-12 mb-3">
+                        <label>Captcha *</label> {{ form.captcha }} {% if form.captcha.errors %}
+                        <div class="text-danger small">{{ form.captcha.errors }}</div>
+                        {% endif %}
+                    </div>
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <button type="submit" class="btn btn-primary w-100">Register</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

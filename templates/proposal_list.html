@@ -1,0 +1,42 @@
+{% extends 'base.html' %} {% load humanize %} {% block title %}Proposals{% endblock %} {% block content %}
+<div class="container">
+    <h2 class="text-center my-4">Your Received Proposals</h2>
+
+    {% if proposals %}
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Advert</th>
+                    <th>Category</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Proposed Amount</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for proposal in proposals %}
+                <tr>
+                    <td>{{ proposal.created_at|date:"M d, Y" }}</td>
+                    <td><a href="{% url 'advert_detail' proposal.advert.pk %}">{{ proposal.advert.title }}</a></td>
+                    <td><a href="{% url 'advert_list' %}?category={{ proposal.advert.category }}">{{ proposal.advert.category }}</a></td>
+                    <td>{{ proposal.name }}</td>
+                    <td>{{ proposal.email }}</td>
+                    <td>{{ proposal.phone_number }}</td>
+                    <td>₦{{ proposal.proposed_amount|intcomma }}</td>
+                    <td>{{ proposal.notes|default:"-" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        You haven't received any proposals yet.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

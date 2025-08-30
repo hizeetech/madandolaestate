@@ -1,0 +1,22 @@
+{% extends 'admin/change_list.html' %}
+
+{% block extrahead %}
+{{ block.super }}
+<script type="text/javascript">
+function toggleNotes(pk) {
+    var shortSpan = document.getElementById('notes-short-' + pk);
+    var fullSpan = document.getElementById('notes-full-' + pk);
+    var toggleLink = document.getElementById('notes-toggle-' + pk);
+
+    if (shortSpan.style.display === 'none') {
+        shortSpan.style.display = 'inline';
+        fullSpan.style.display = 'none';
+        toggleLink.innerText = 'Read more';
+    } else {
+        shortSpan.style.display = 'none';
+        fullSpan.style.display = 'inline';
+        toggleLink.innerText = 'Read less';
+    }
+}
+</script>
+{% endblock %}

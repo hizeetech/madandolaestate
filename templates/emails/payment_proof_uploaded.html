@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Proof Uploaded</title>
+</head>
+
+<body>
+    <p>Dear {{ user.first_name }},</p>
+
+    <p>You have successfully uploaded proof of payment for:</p>
+
+    <ul>
+        <li>Payment For: {{ levy.get_payment_for_display }}</li>
+        <li>Amount: {{ levy.amount }}</li>
+        <li>Month/Year: {{ levy.get_month_display }} {{ levy.year }}</li>
+    </ul>
+
+    <p>Your payment status is now <strong>Pending</strong>. When the payment is confirmed by the admin, your payment profile will be updated.</p>
+
+    <p>Thank you for your prompt payment.</p>
+
+    <p>Best regards,<br> Madandola Estate CDA</p>
+</body>
+
+</html>

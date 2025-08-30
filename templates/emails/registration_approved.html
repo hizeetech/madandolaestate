@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Approved</title>
+</head>
+
+<body>
+    <h2>Your Account Has Been Approved</h2>
+    <p>Dear {{ user.first_name }},</p>
+    <p>We're pleased to inform you that your registration with Madandola Estate CDA has been approved.</p>
+    <p>You can now log in to your account and access all member features.</p>
+
+    <p><a href="{{ domain }}/login" style="background:#1d72b8;color:white;padding:10px 20px;border-radius:5px;text-decoration:none;">
+    Login Now
+    </a></p>
+
+
+    <p>Regards,<br>Madandola Estate CDA Team</p>
+</body>
+
+</html>

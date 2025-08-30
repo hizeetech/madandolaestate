@@ -1,0 +1,345 @@
+<!DOCTYPE html> {% load static %}
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{% block title %}Madandola Estate CDA{% endblock %}</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        body {
+            background-image: url("{% static 'images/back2.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            font-size: 1rem;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        .theme-toggle {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            z-index: 999;
+            background: #ddd;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        [data-theme="dark"] .theme-toggle {
+            background: #444;
+            color: #fff;
+        }
+        
+        .content-overlay {
+            background-color: rgba(255, 255, 255, 0.9);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .navbar-left-image,
+        .navbar-right-image {
+            margin: 0 10px;
+            max-width: 150px;
+            height: auto;
+        }
+        
+        .navbar-nav .nav-link {
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 12px 15px;
+            border-radius: 5px;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .footer {
+            flex-shrink: 0;
+            background-color: #000;
+            padding: 40px 0 20px;
+            margin-top: auto;
+            font-size: 0.9rem;
+            color: white;
+        }
+        
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            color: #0d6efd;
+        }
+        
+        .social-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            transform: scale(1.3);
+            color: #0d6efd;
+        }
+        
+        .form-control {
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: rgba(255, 255, 255, 0.95);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+            .navbar-nav .nav-link {
+                font-size: 0.95rem;
+                padding: 8px 10px;
+                margin: 0 5px;
+            }
+            .navbar-left-image,
+            .navbar-right-image {
+                max-width: 70px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .navbar-left-image,
+            .navbar-right-image {
+                max-width: 50px;
+                margin: 0 5px;
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <div class="content-overlay">
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: black;">
+            <div class="container-fluid">
+                <div class="navbar-left-image">
+                    {% if left_image %}
+                    <img src="{{ left_image.image.url }}" alt="{{ left_image.description }}" class="img-fluid"> {% endif %}
+                </div>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav justify-content-center w-100">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'home' %}">Home</a>
+                        </li>
+
+                        {% if not user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'registration' %}">Register</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Login</a>
+                        </li>
+                        {% endif %}
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAdverts" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Adverts
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownAdverts">
+                                <li><a class="dropdown-item" href="{% url 'advert_list' %}">All Adverts</a></li>
+                                {% if user.is_authenticated %}
+                                <li><a class="dropdown-item" href="{% url 'advert_list' %}?user={{ request.user.id }}">My Adverts</a></li>
+                                <li><a class="dropdown-item" href="{% url 'proposal_list' %}">Proposals</a></li>
+                                {% endif %}
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="{% url 'advert_list' %}?category=For%20Sale">For Sale</a></li>
+                                <li><a class="dropdown-item" href="{% url 'advert_list' %}?category=For%20Rent">For Rent</a></li>
+                                <li><a class="dropdown-item" href="{% url 'advert_list' %}?category=For%20Lease">For Lease</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownExecutives" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Executives
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownExecutives">
+                                <li><a class="dropdown-item" href="{% url 'past_executives' %}">Past</a></li>
+                                <li><a class="dropdown-item" href="{% url 'present_executives' %}">Present</a></li>
+                            </ul>
+                        </li>
+
+                        {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownCommittees" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Committees
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownCommittees">
+                                {% for committee in committees %}
+                                <li><a class="dropdown-item" href="{% url 'committee_detail' committee.id %}">{{ committee.name }}</a></li>
+                                {% empty %}
+                                <li><a class="dropdown-item" href="#">No committees found</a></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'create_advert' %}">Add Advert</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownSocial" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Social Networking
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownSocial">
+                                <li><a class="dropdown-item" href="{% url 'artisans_list' %}">Artisans</a></li>
+                                <li><a class="dropdown-item" href="{% url 'professionals_list' %}">Professionals</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'project_donations_list' %}">Project Donations</a>
+                        </li>
+                        {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'community_policy' %}">Community Policy</a>
+                        </li>
+                        {% endif %} {% if user.is_staff %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'admin_dashboard' %}">Admin Portal</a>
+                        </li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                    <div class="navbar-right-image ms-auto">
+                        {% if right_image %}
+                        <img src="{{ right_image.image.url }}" alt="{{ right_image.description }}" class="img-fluid"> {% endif %}
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container mt-4 mb-4">
+            {% if messages %} {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %} {% endif %} {% block content %}{% endblock %}
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="footer text-white">
+            <div class="container">
+                <!-- <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <h5>Contact</h5>
+                        {% if site_settings.footer_text %}
+                        <div>{{ site_settings.footer_text|safe }}</div>
+                        {% else %}
+                        <p>No contact info set.</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <h5>Quick Links</h5>
+                        <ul class="list-unstyled">
+                            <li><a href="{% url 'home' %}">Home</a></li>
+                            <li><a href="{% url 'registration' %}">Register</a></li>
+                            <li><a href="{% url 'login' %}">Login</a></li>
+                            <li><a href="{% url 'project_donations_list' %}">Donations</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <h5>Follow Us</h5>
+                        <div class="d-flex gap-3 fs-4">
+                            {% if site_settings.facebook_url %}
+                            <a href="{{ site_settings.facebook_url }}" target="_blank" class="text-white social-icon"><i class="fab fa-facebook-f"></i></a> {% endif %} {% if site_settings.instagram_url %}
+                            <a href="{{ site_settings.instagram_url }}" target="_blank" class="text-white social-icon"><i class="fab fa-instagram"></i></a> {% endif %} {% if site_settings.twitter_url %}
+                            <a href="{{ site_settings.twitter_url }}" target="_blank" class="text-white social-icon"><i class="fab fa-x-twitter"></i></a> {% endif %} {% if site_settings.tiktok_url %}
+                            <a href="{{ site_settings.tiktok_url }}" target="_blank" class="text-white social-icon"><i class="fab fa-tiktok"></i></a> {% endif %} {% if site_settings.linkedin_url %}
+                            <a href="{{ site_settings.linkedin_url }}" target="_blank" class="text-white social-icon"><i class="fab fa-linkedin-in"></i></a> {% endif %}
+                        </div>
+                    </div>
+                </div> -->
+                <div class="text-center mt-3 small">
+                    <p>&copy; {% now "Y" %} Madandola Estate CDA. All rights reserved.</p>
+                    <p>Designed by HizeeTech</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- jQuery & Bootstrap Bundle -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
+    <!--Start of Tawk.to Script-->
+    <script type="text/javascript">
+        var Tawk_API = Tawk_API || {},
+            Tawk_LoadStart = new Date();
+        (function() {
+            var s1 = document.createElement("script"),
+                s0 = document.getElementsByTagName("script")[0];
+            s1.async = true;
+            s1.src = 'https://embed.tawk.to/6866de839a907e19109e8054/1iv8tacno';
+            s1.charset = 'UTF-8';
+            s1.setAttribute('crossorigin', '*');
+            s0.parentNode.insertBefore(s1, s0);
+        })();
+    </script>
+    <!--End of Tawk.to Script-->
+    <div class="theme-toggle" onclick="toggleTheme()">
+        <i class="bi bi-brightness-high-fill"></i>
+    </div>
+    <!-- Dark/Light Theme Toggle -->
+    <div class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-adjust"></i></div>
+    <script>
+        function setTheme(theme) {
+            document.documentElement.setAttribute("data-theme", theme);
+            localStorage.setItem("theme", theme);
+        }
+
+        function toggleTheme() {
+            const current = localStorage.getItem("theme") || "light";
+            setTheme(current === "light" ? "dark" : "light");
+        }
+        (function() {
+            const saved = localStorage.getItem("theme") || "light";
+            setTheme(saved);
+        })();
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>
